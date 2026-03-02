@@ -8,3 +8,4 @@ langchain-openai
 langchain-huggingface
 langchain-community
 langchain-experimental
+langchain-ollama
