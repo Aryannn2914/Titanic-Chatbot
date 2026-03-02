@@ -1,26 +1,28 @@
-# from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
-# from os import getenv
-# from dotenv import load_dotenv
+from os import getenv
+from dotenv import load_dotenv
 # from langchain_classic.agents import AgentType
 # from langchain_huggingface import HuggingFaceEndpoint
-from langchain_ollama import ChatOllama
+# from langchain_ollama import ChatOllama
 import pandas as pd
 # import matplotlib as mt
 import streamlit as st
 import matplotlib.pyplot as plt
 
 
-# load_dotenv()
+load_dotenv()
+
+openai_key = st.secrets.get("OPENAI_API_KEY", getenv("OPENAI_API_KEY"))
 
 # If using openrouter uncomment this variable
-# llm = ChatOpenAI(
-#     model="meta-llama/llama-3.2-3b-instruct:free",
-#     base_url="https://openrouter.ai/api/v1",
-#     api_key=getenv("OPENROUTER_API_KEY111"),
-#     temperature=0,
-#     verbose=True,
-# )
+llm = ChatOpenAI(
+    model="meta-llama/llama-3.2-3b-instruct:free",
+    base_url="https://openrouter.ai/api/v1",
+    api_key=openai_key,
+    temperature=0,
+    verbose=True,
+)
 
 # If using huggingface uncomment this variable
 # llm = HuggingFaceEndpoint(
@@ -32,7 +34,7 @@ import matplotlib.pyplot as plt
 # )
 
 # If using ollama uncomment this variable
-llm = ChatOllama(model="llama3.1:8b", temperature=0, verbose=True)
+# llm = ChatOllama(model="llama3.1:8b", temperature=0, verbose=True)
 
 original_df = pd.read_csv("data/train.csv")
 
