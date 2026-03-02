@@ -1,16 +1,17 @@
 # from langchain_openai import ChatOpenAI
 from langchain_experimental.agents import create_pandas_dataframe_agent
-from os import getenv
-from dotenv import load_dotenv
+# from os import getenv
+# from dotenv import load_dotenv
 # from langchain_classic.agents import AgentType
 # from langchain_huggingface import HuggingFaceEndpoint
 from langchain_ollama import ChatOllama
 import pandas as pd
-import matplotlib as mt
+# import matplotlib as mt
+import streamlit as st
+import matplotlib.pyplot as plt
 
-mt.use("Agg")
 
-load_dotenv()
+# load_dotenv()
 
 # If using openrouter uncomment this variable
 # llm = ChatOpenAI(
@@ -30,42 +31,46 @@ load_dotenv()
 #     task="text-generational",
 # )
 
-#If using ollama uncomment this variable
+# If using ollama uncomment this variable
 llm = ChatOllama(model="llama3.1:8b", temperature=0, verbose=True)
 
 original_df = pd.read_csv("data/train.csv")
 
+df = original_df.copy()
 
-def agent_reasoning(question: str):
-    df = original_df.copy()
+agent = create_pandas_dataframe_agent(
+    llm,
+    df,
+    allow_dangerous_code=True,
+    verbose=True,
+    # max_iterations=4,
+    agent_executor_kwargs={"handle_parsing_errors": True},
+    prefix="""
+You are a Python data analysis agent with access to a pandas DataFrame named df.
 
-    agent = create_pandas_dataframe_agent(
-        llm,
-        df,
-        allow_dangerous_code=True,
-        verbose=True,
-        agent_executor_kwargs={"handle_parsing_errors": True},
-        prefix="""
-    You are a Python data analysis agent.
+When calling the python tool:
+- Output ONLY valid Python code.
+- No markdown.
+- No explanations.
+- Do not reload data.
 
-    You are given a pandas DataFrame named df.
+After the tool runs:
+- Provide a clear plain-English answer.
+- If a plot was created, describe it.
+- Do not include code in the final answer.
+""",
+)
 
-    When using the python tool:
-    - Output ONLY raw executable Python code.
-    - Do NOT use markdown.
-    - Do NOT wrap code in ``` blocks.
-    - Do NOT include explanations.
-    - Do NOT reload the CSV file.
-    - The dataframe is already available as df.
-    - Generate plots when necessary using matplotlib.
-    - If generating a plot, ensure it is displayed using plt.show().
+# Streamlit
+st.title("Chatbot")
 
-    After using the python tool:
-    - Explain the results clearly in plain English.
-    - If a plot was generated, describe what the plot shows.
-    - Do NOT include code in the final answer.
-    - Do NOT use markdown in the final answer.
-        """,
-    )
+question = st.chat_input("Ask question")
+
+if question:
+    plt.close("all")
+    st.write(question)
     response = agent.invoke({"input": question})
-    return response["output"]
+    st.write(response["output"])
+    if plt.get_fignums():
+        fig = plt.gcf()
+        st.pyplot(fig)
