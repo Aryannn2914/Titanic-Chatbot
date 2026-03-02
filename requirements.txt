@@ -7,3 +7,4 @@ matplotlib
 langchain-openai
 langchain-huggingface
 langchain-community
+langchain-experimental
