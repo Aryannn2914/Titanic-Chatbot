@@ -1,0 +1,9 @@
+langchain 
+streamlit
+python-dotenv
+openai
+pandas
+matplotlib
+langchain-openai
+langchain-huggingface
+langchain-community

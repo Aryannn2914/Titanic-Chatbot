@@ -12,6 +12,7 @@ mt.use("Agg")
 
 load_dotenv()
 
+# If using openrouter uncomment this variable
 # llm = ChatOpenAI(
 #     model="meta-llama/llama-3.2-3b-instruct:free",
 #     base_url="https://openrouter.ai/api/v1",
@@ -20,6 +21,7 @@ load_dotenv()
 #     verbose=True,
 # )
 
+# If using huggingface uncomment this variable
 # llm = HuggingFaceEndpoint(
 #     repo_id="meta-llama/Llama-3.2-1B-Instruct",
 #     # provider="featherless-ai",
@@ -28,6 +30,7 @@ load_dotenv()
 #     task="text-generational",
 # )
 
+#If using ollama uncomment this variable
 llm = ChatOllama(model="llama3.1:8b", temperature=0, verbose=True)
 
 original_df = pd.read_csv("data/train.csv")
@@ -42,7 +45,6 @@ def agent_reasoning(question: str):
         allow_dangerous_code=True,
         verbose=True,
         agent_executor_kwargs={"handle_parsing_errors": True},
-        # agent_type=AgentType.OPENAI_FUNCTIONS,
         prefix="""
     You are a Python data analysis agent.
 
@@ -67,8 +69,3 @@ def agent_reasoning(question: str):
     )
     response = agent.invoke({"input": question})
     return response["output"]
-
-
-# agent_reasoning(
-#     "How many male were there in the ship, Show me the percentage of the male and female, by plotting it"
-# )
