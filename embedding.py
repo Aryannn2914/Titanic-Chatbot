@@ -13,13 +13,11 @@ import matplotlib.pyplot as plt
 
 load_dotenv()
 
-openai_key = st.secrets.get("OPENAI_API_KEY", getenv("OPENAI_API_KEY"))
-
 # If using openrouter uncomment this variable
 llm = ChatOpenAI(
     model="meta-llama/llama-3.2-3b-instruct:free",
     base_url="https://openrouter.ai/api/v1",
-    api_key=openai_key,
+    api_key=st.secrets.get("OPENAI_API_KEY", getenv("OPENAI_API_KEY")),
     temperature=0,
     verbose=True,
 )
