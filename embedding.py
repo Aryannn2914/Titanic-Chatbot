@@ -17,7 +17,7 @@ load_dotenv()
 llm = ChatOpenAI(
     model="meta-llama/llama-3.2-3b-instruct:free",
     base_url="https://openrouter.ai/api/v1",
-    api_key=st.secrets.get("OPENAI_API_KEY", getenv("OPENAI_API_KEY")),
+    api_key=st.secrets.get("OPENROUTER_API_KEY", getenv("OPENROUTER_API_KEY")),
     temperature=0,
     verbose=True,
 )
